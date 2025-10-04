@@ -1,0 +1,26 @@
+{
+  "manifest_version": 3,
+  "name": "bTV Canceller",
+  "version": "1.1",
+  "description": "Removes scripts and variables on btv.bg that match patterns from a GitHub list.",
+  "permissions": ["scripting", "storage"],
+  "host_permissions": [
+    "https://raw.githubusercontent.com/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["*://btv.bg/*", "*://*.btv.bg/*"],
+      "js": ["removeScripts.js", "injectCleaner.js"],
+      "run_at": "document_start"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["pageCleaner.js"],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}
