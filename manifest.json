@@ -5,7 +5,8 @@
   "description": "Removes scripts and variables on btv.bg that match patterns from a GitHub list.",
   "permissions": ["scripting", "storage"],
   "host_permissions": [
-    "https://raw.githubusercontent.com/*"
+    "https://raw.githubusercontent.com/*",
+    "https://*.btv.bg/*"
   ],
   "background": {
     "service_worker": "background.js"

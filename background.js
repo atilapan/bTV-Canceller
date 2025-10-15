@@ -23,7 +23,31 @@ async function fetchPatterns() {
 
 chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   if (msg.type === "getPatterns") {
+    console.log("[bTV Canceller] Patterns requested!");
     fetchPatterns().then(patterns => sendResponse({ patterns }));
+    return true; // async response
+  }
+
+   if (msg.type === "addPatternToCache") {
+    console.log("[bTV Canceller] New pattern added to cache!");
+
+    fetchPatterns().then(patterns => {
+      patterns.push(msg.pattern);
+      chrome.storage.local.set({ patterns });
+    });
+
+    chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
+      chrome.scripting.executeScript({
+        target: { tabId: tabs[0].id },
+        func: () => 
+          {
+            alert('[bTV Canceller] New pattern added to cache. Reloading page...');
+            location.reload(true);
+          }
+      });
+    });
+
+
     return true; // async response
   }
 });

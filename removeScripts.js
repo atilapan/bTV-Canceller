@@ -28,6 +28,19 @@
     if (!response || !response.patterns) return;
     const patterns = regexListFromStrings(response.patterns);
 
+    // Try to dynamically find a pattern
+    let dynamic_pattern = document.getElementsByTagName("html")[0].innerHTML.match(/window\.(\w{30}) = true/);
+    console.log(dynamic_pattern);
+    if(dynamic_pattern && dynamic_pattern[1]) {
+      if(!patterns.some(p => p.test(dynamic_pattern[1])))
+      {
+        patterns.push(dynamic_pattern[1]);
+
+        // Add to cache in background
+        chrome.runtime.sendMessage({ type: "addPatternToCache", pattern: dynamic_pattern[1] });
+      }
+    }
+
     // Remove existing scripts
     document.querySelectorAll("script").forEach(el => removeIfSuspect(el, patterns));
 
